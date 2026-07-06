@@ -11,6 +11,7 @@ import io.mockk.just
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import io.mockk.verify
+import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -26,6 +27,7 @@ import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
+import java.time.Duration
 
 @ExtendWith(MockKExtension::class)
 class SudokuCliIntegrationTest {
@@ -135,9 +137,13 @@ class SudokuCliIntegrationTest {
         val sudokuCli = SudokuCli(sudokuGame, input, output)
         sudokuCli.run()
 
-        // actual response is 2nd last as after an additional round starts after checking
-        val response = gameResponseFromEnd(outputStream, offset = 1)
-        response shouldContain "already exists"
+        val raceConditionGracePeriod = Duration.ofSeconds(3)
+        await().atMost(raceConditionGracePeriod).untilAsserted {
+            // actual response is 2nd last as after an additional round starts after checking
+            val response = gameResponseFromEnd(outputStream, offset = 1)
+            response shouldContain "already exists"
+        }
+
     }
 
     @Test

@@ -1,8 +1,18 @@
 # Sudoku
 
-This is a Cli Sudoku application built with Java 21.
+This is a Cli Sudoku application built with Java 21 and can be run on any OS.
 
 The project follows Domain-Driven Design, where domain models encapsulate business logic. This makes it easier to extend and understand.
+
+## Running the Application
+
+To run, execute:  
+- `./gradlew installDist`
+- `./build/install/sudoku/bin/sudoku`
+
+Alternatively, run:
+- `./gradlew clean jar`
+- `java -jar build/libs/sudoku-1.0.jar`
 
 ## Architecture
 

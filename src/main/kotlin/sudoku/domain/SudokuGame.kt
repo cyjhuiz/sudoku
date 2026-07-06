@@ -42,7 +42,6 @@ class SudokuGame(
         if (!hasMadeFirstMove) {
             hasMadeFirstMove = true
         }
-
         val targetCell = playerBoard[move.position.row][move.position.col]
         val valueBeforeUpdate = targetCell.value
 
