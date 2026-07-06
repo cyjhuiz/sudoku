@@ -40,8 +40,6 @@ To avoid becoming a "god class", responsibilities are delegated to specialised d
 
 It maintains correctly and incorrectly filled positions using HashSets. Since cells frequently move between these states, O(1) insertion and removal provides efficient updates.
 
-Since HashSets are naturally unordered, this randomises hints selected which makes it less predictable and more interesting.
-
 This is a better alternative than using bruteforce approach to iterate through the entire board till an eligible hint is found.
 
 ### ViolationTracker
