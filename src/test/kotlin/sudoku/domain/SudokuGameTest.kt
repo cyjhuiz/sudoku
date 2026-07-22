@@ -71,12 +71,17 @@ class SudokuGameTest {
     inner class StartNewGame {
         @Test
         fun `should start new game`() {
-            sudokuGame.hasMadeFirstMove = true
+            every {
+                cell.setValue(any())
+            } returns SUCCESS_MSG.right()
+
+            // simulate ongoing game before starting new game
+            sudokuGame.place(move)
+            sudokuGame.hasMadeFirstMove shouldBe true
 
             sudokuGame.startNewGame()
 
             sudokuGame.hasMadeFirstMove shouldBe false
-
             // 2 times as its being called during initialisation and startNewGame()
             verify(exactly = 2) {
                 sudokuBoardFactory.createRandomBoard()
@@ -97,10 +102,12 @@ class SudokuGameTest {
             val result = sudokuGame.place(move).shouldBeRight()
 
             result shouldBe SUCCESS_MSG
+
+            sudokuGame.hasMadeFirstMove shouldBe true
             verify(exactly = 1) {
                 cell.setValue(move.value)
                 mockHintManager.trackCellUpdate(cell)
-                mockViolationsTracker.trackCellUpdate(cell, VALUE)
+                mockViolationsTracker.trackCellUpdate(cell, INITIAL_VALUE)
             }
         }
 
@@ -181,12 +188,15 @@ class SudokuGameTest {
         } returns cell
         every {
             cell.value
-        } returns VALUE
+        } returns INITIAL_VALUE
     }
 
     private companion object {
-        const val VALUE = 1
-        val move = MoveTestBuilder().build()
+        const val INITIAL_VALUE = 1
+        val move =
+            MoveTestBuilder(
+                value = INITIAL_VALUE + 1,
+            ).build()
 
         const val SUCCESS_MSG = "success"
         const val FAILURE_MSG = "failure"

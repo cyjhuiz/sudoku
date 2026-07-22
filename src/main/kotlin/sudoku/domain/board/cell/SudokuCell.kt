@@ -11,18 +11,16 @@ class SudokuCell(
     val answer: Int,
     val isModifiable: Boolean,
 ) {
-    val value: Int
-        get() = _value
-
-    private var _value = initialValue
+    var value: Int = initialValue
+        private set
 
     fun setValue(incomingValue: Int): Either<String, String> =
         if (!isModifiable) {
             MODIFY_PREFILLED_ERROR_MSG.format(position.referenceLabel).left()
-        } else if (incomingValue == _value) {
+        } else if (incomingValue == value) {
             REPEATED_MOVE_ERROR_MSG.left()
         } else {
-            _value = incomingValue
+            value = incomingValue
             MOVE_ACCEPTED_SUCCESS_MSG.right()
         }
 
@@ -32,13 +30,13 @@ class SudokuCell(
         } else if (!isModifiable) {
             MODIFY_PREFILLED_ERROR_MSG.format(position.referenceLabel).left()
         } else {
-            _value = EMPTY_CELL_VALUE
+            value = EMPTY_CELL_VALUE
             MOVE_ACCEPTED_SUCCESS_MSG.right()
         }
 
-    fun isFilled() = _value != EMPTY_CELL_VALUE
+    fun isFilled() = value != EMPTY_CELL_VALUE
 
-    fun isCorrectlyFilled() = _value == answer
+    fun isCorrectlyFilled() = value == answer
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
