@@ -35,9 +35,9 @@ class SudokuCliIntegrationTest {
     @MockK
     private lateinit var sudokuBoardFactory: SudokuBoardFactory
 
-    private val hintManagerFactory = HintManagerFactory()
+    private lateinit var hintManagerFactory: HintManagerFactory
 
-    private val violationsTrackerFactory = ViolationsTrackerFactory()
+    private lateinit var violationsTrackerFactory: ViolationsTrackerFactory
 
     private lateinit var sudokuGame: SudokuGame
 
@@ -47,6 +47,9 @@ class SudokuCliIntegrationTest {
 
     @BeforeEach
     fun setUp() {
+        hintManagerFactory = HintManagerFactory()
+        violationsTrackerFactory = ViolationsTrackerFactory()
+
         outputStream = ByteArrayOutputStream()
         output = PrintStream(outputStream, true)
 
@@ -139,7 +142,7 @@ class SudokuCliIntegrationTest {
 
         val raceConditionGracePeriod = Duration.ofSeconds(3)
         await().atMost(raceConditionGracePeriod).untilAsserted {
-            // actual response is 2nd last as after an additional round starts after checking
+            // actual response is 2nd last as an additional round starts after checking
             val response = gameResponseFromEnd(outputStream, offset = 1)
             response shouldContain "already exists"
         }
